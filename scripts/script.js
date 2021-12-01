@@ -33,7 +33,22 @@ const gameBoard = function(){
 
 
 const displayController = function(){
-    return {};
+    let grid = document.getElementById("game-board")
+    console.log(grid);
+    for(i=0; i<gameBoard.board.length; i++){
+        let element = document.createElement("div");
+        element.id = `board__${i}`;
+        element.innerText = gameBoard.board[i];
+        grid.append(element);
+    }
+    
+    function updateGrid (){
+        let elements = array.from(grid.querySelectorAll("div"));
+        elements.forEach(()=>{
+            element.innerText = gameBoard[i];
+        });
+    }
+    return {updateGrid};
 }();
 
 
