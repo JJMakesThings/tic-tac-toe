@@ -1,6 +1,6 @@
 const gameBoard = function(){
     'use strict';
-    function _checkWin(){
+    function checkWin(){
         if (board[0]==board[1] && board[0]==board[2]){
             _getWinner(board[0]);
         }else if(board[0]==board[3] && board[0]==board[6]){
@@ -16,29 +16,36 @@ const gameBoard = function(){
         }
     };
     function _getWinner(token){
-        let winner = game.players.find(player => player.token==token);
+        let winner = players.list.find(player => player.token==token);
         console.log(winner.name);
     };
+    function whosTurn(){
+        return (this.turn%2==0)?players.player2:players.player1
+    };
+    let turn = 1;
     let board = [
         "0","1","2",
         "3","4","5",
         "6","7","8",
     ];
-    function move(location, player){
-        board[location] = player.token;
-        _checkWin();
-    };
-    return {board, move};
+    return {board, turn, checkWin, whosTurn};
 }();
 
 
 const displayController = function(){
     let grid = document.getElementById("game-board")
     console.log(grid);
+
     for(i=0; i<gameBoard.board.length; i++){
         let element = document.createElement("div");
-        element.id = `board__${i}`;
+        element.dataKey = i;
+        element.classList.add("game-space")
         element.innerText = gameBoard.board[i];
+        element.addEventListener("click", (e)=> {
+            let player = gameBoard.whosTurn();
+            player.move(e.target.dataKey);
+            e.target.innerText = player.token;
+        });
         grid.append(element);
     }
     
@@ -52,25 +59,41 @@ const displayController = function(){
 }();
 
 
-const game = function(){
-    let players = [];
-    function _player(name, token){
-        return {name, token}
-    }
-    const createPlayer = function(name, token){
-        const player = _player(name, token);
-        players.push(player);
-        return player
-    }
-    return {createPlayer, players};
-}();
+const players = function(){
+    const _mover = (state) => ({
+        move(location){
+            gameBoard.board[location] = state.token;
+            gameBoard.turn ++;
+            gameBoard.checkWin();
+        }
+    });
 
+    const _setter = (state) => ({
+        set(name, token){
+            state.name = name;
+            state.token = token;
+        }
+    });
+
+    function _player(){
+        let player = {};
+        return Object.assign(
+          player,
+          _mover(player),
+          _setter(player)
+        );
+    };
+
+    let player1 = _player();
+    let player2 = _player();
+
+    let list = [player1, player2];
+
+    return {player1, player2, list};
+}();
 
 
 // console stuff
 
-let player1 = game.createPlayer("John", "X");
-let player2 = game.createPlayer("Jill", "O");
-gameBoard.move(0, player2);
-gameBoard.move(1, player2);
-gameBoard.move(2, player2);
+players.player1.set("John", "X");
+players.player2.set("Jill", "O");

@@ -1,0 +1,33 @@
+body{
+    background-color: whitesmoke;
+}
+
+#game-board {
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0 auto;
+    box-sizing: content-box;
+    height: 310px;
+    width: 310px;
+    grid-gap: 5px;
+    background-color: grey;
+}
+    .game-space{
+        text-align: center;
+        line-height: 100px;
+        background-color: whitesmoke;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: black;
+    }
+
+@media (min-width: 768px){
+    #game-board {
+        height: 610px;
+        width: 610px;
+    }
+    .game-space{
+        line-height: 200px;
+        font-size: 2rem;
+    }
+}
