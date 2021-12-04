@@ -2,10 +2,14 @@ body{
     background-color: whitesmoke;
 }
 
+#container {
+    padding: 10px 20px;
+    max-width: 900px;
+}
 #game-board {
     display:grid;
     grid-template-columns: repeat(3, 1fr);
-    margin: 0 auto;
+    margin: 20px auto;
     box-sizing: content-box;
     height: 310px;
     width: 310px;
@@ -20,7 +24,26 @@ body{
         font-weight: bold;
         color: black;
     }
+#actions__undo{
+    background-color: cadetblue;
+    color:rgb(38, 78, 80);
+    padding: 5px 20px;
+    margin: 10px 0;
+    border-radius: 5px;
 
+}
+#actions__undo:hover
+#actions__undo:active{
+    background-color: rgb(141, 217, 219);
+}
+#actions__undo.inactive{
+    background-color: grey;
+    color: rgb(65, 65, 65)
+}
+#actions__undo.inactive:hover
+#actions__undo.inactive:active{
+    background-color: grey;
+}
 @media (min-width: 768px){
     #game-board {
         height: 610px;

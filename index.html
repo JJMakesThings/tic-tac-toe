@@ -9,9 +9,22 @@
     <script src="./scripts/script.js" defer></script>
 </head>
 <body>
-   <h1>Tic-Tac-Toe</h1> 
-   <div id=game-board>
-       
-   </div>
+    <div id="container">
+        <h1>Tic-Tac-Toe</h1> 
+        <div id="players">
+             <label for="player1">X Player Name:</label>
+             <input type="text" id="player1"><br>
+             <label for="player2">O Player Name:</label>
+             <input type="text" id="player2"><br>
+        </div>
+        <div id="actions">
+            <button type="button" id="actions__undo">undo</button>
+        </div>
+        <div id="turn">
+            <h1 id="turn__text"></h1>
+        </div>
+        <div id="game-board">
+        </div>
+    </div>
 </body>
 </html>
