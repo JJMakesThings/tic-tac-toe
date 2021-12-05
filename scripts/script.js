@@ -1,28 +1,27 @@
 const gameBoard = (function(){
     'use strict';
-    function checkWin(){
-        if (board[0]==board[1] && board[0]==board[2]){
-            _getWinner(board[0]);
-        }else if(board[0]==board[3] && board[0]==board[6]){
-            return _getWinner(board[0]);
-        }else if(board[0]==board[4] && board[0]==board[8]){
-            return _getWinner(board[0]);
-        }else if(board[8]==board[5] && board[8]==board[2]){
-            return _getWinner(board[8]);
-        }else if(board[8]==board[7] && board[8]==board[6]){
-            return _getWinner(board[8]);
-        }else if(board[2]==board[4] && board[2]==board[6]){
-            return _getWinner(board[2]);
-        }else if(board[3]==board[4] && board[3]==board[5]){
-            return _getWinner(board[3]);
-        }else if(board[1]==board[4] && board[1]==board[7]){
-            return _getWinner(board[1]);
+    function checkWin(token){
+        if (board[0]==token && board[1]==token && board[2]==token ||
+            board[3]==token && board[4]==token && board[5]==token ||
+            board[6]==token && board[7]==token && board[8]==token ||
+            board[0]==token && board[3]==token && board[6]==token ||
+            board[1]==token && board[4]==token && board[7]==token ||
+            board[2]==token && board[5]==token && board[8]==token ||
+            board[0]==token && board[4]==token && board[8]==token ||
+            board[2]==token && board[4]==token && board[6]==token){
+            return _getWinner(token);
+        } else if (this.turn>9){
+            return _getWinner();
         }
     };
     function _getWinner(token){
-        let winner = players.list.find(player => player.token==token);
-        document.getElementById("overlay").style.display="block";
-        document.getElementById("overlay__text").innerText=`Congratulations ${winner.name}!`      
+        if(token){
+            let winner = players.list.find(player => player.token==token);
+            document.getElementById("overlay__text").innerText=`Congratulations ${winner.name}!`   
+        } else {
+            document.getElementById("overlay__text").innerText="It's a Draw"
+        };
+        document.getElementById("overlay").style.display="block"; 
     };
     function whosTurn(){
         return (this.turn%2==0)?players.player2:players.player1
@@ -35,9 +34,9 @@ const gameBoard = (function(){
     let turn = 1;
     let lastMove;
     let board = [
-        "0","1","2",
-        "3","4","5",
-        "6","7","8"
+        "","","",
+        "","","",
+        "","",""
     ];
     return {board, turn, lastMove, checkWin, whosTurn, undoLastMove};
 })();
@@ -48,6 +47,7 @@ const displayController = (function(){
     let _isInitialized = false;
     function initialize(){
         if (!_isInitialized){
+            _grid.style.backgroundColor="grey";
             for(i=0; i<gameBoard.board.length; i++){
                 let element = document.createElement("div");
                 element["data-key"] = i;
@@ -73,16 +73,17 @@ const displayController = (function(){
     return {updateGrid, initialize};
 })();
 
+
 const actions = (function(){
     let _beginButton = document.getElementById("actions__begin");
     _beginButton.addEventListener("click", ()=>{
-        let formPlayer1 = document.getElementById("player1").value;
-        let formPlayer2 = document.getElementById("player2").value;
-        console.log(formPlayer1);
-        console.log(formPlayer2);
-        if(formPlayer1 && formPlayer2){
-            players.player1.set(formPlayer1, "X");
-            players.player2.set(formPlayer2, "O");
+        let formPlayer1 = document.getElementById("player1");
+        let formPlayer2 = document.getElementById("player2");
+        formPlayer1.setAttribute("readonly", "true");
+        formPlayer2.setAttribute("readonly", "true");
+        if(formPlayer1.value && formPlayer2.value){
+            players.player1.set(formPlayer1.value, "X");
+            players.player2.set(formPlayer2.value, "O");
             displayController.initialize();
             _beginButton.classList.add("inactive");
             _resetButton.classList.remove("inactive");
@@ -106,6 +107,7 @@ const actions = (function(){
     return {undoButton}
 })();
 
+
 const players = (function(){
     const _mover = (state) => ({
         move(location){
@@ -114,7 +116,7 @@ const players = (function(){
             gameBoard.lastMove = location;
             displayController.updateGrid();
             actions.undoButton.classList.remove("inactive");
-            gameBoard.checkWin();
+            gameBoard.checkWin(state.token);
         }
     });
 
@@ -133,10 +135,8 @@ const players = (function(){
           _setter(player)
         );
     };
-
     let player1 = _player();
     let player2 = _player();
-
     let list = [player1, player2];
 
     return {player1, player2, list};
