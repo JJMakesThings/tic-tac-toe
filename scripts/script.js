@@ -21,7 +21,8 @@ const gameBoard = (function(){
     };
     function _getWinner(token){
         let winner = players.list.find(player => player.token==token);
-        console.log(winner.name);
+        document.getElementById("overlay").style.display="block";
+        document.getElementById("overlay__text").innerText=`Congratulations ${winner.name}!`      
     };
     function whosTurn(){
         return (this.turn%2==0)?players.player2:players.player1
@@ -34,47 +35,76 @@ const gameBoard = (function(){
     let turn = 1;
     let lastMove;
     let board = [
-        "1","2","3",
-        "4","5","6",
-        "7","8","9"
+        "0","1","2",
+        "3","4","5",
+        "6","7","8"
     ];
     return {board, turn, lastMove, checkWin, whosTurn, undoLastMove};
 })();
 
 
 const displayController = (function(){
-    let grid = document.getElementById("game-board")
-    for(i=0; i<gameBoard.board.length; i++){
-        let element = document.createElement("div");
-        element["data-key"] = i;
-        element.classList.add("game-space")
-        element.innerText = gameBoard.board[i];
-        element.addEventListener("click", (e)=> {
-            let player = gameBoard.whosTurn();
-            player.move(e.target["data-key"]);
-        });
-        grid.append(element);
-    }
-
-    let undoButton = document.getElementById("actions__undo");
-    undoButton.addEventListener("click", (e)=>{
-        console.log(e.target);
-        gameBoard.undoLastMove();
-        updateGrid();
-        undoButton.classList.add("inactive")
-    });
-    
+    let _grid = document.getElementById("game-board")
+    let _isInitialized = false;
+    function initialize(){
+        if (!_isInitialized){
+            for(i=0; i<gameBoard.board.length; i++){
+                let element = document.createElement("div");
+                element["data-key"] = i;
+                element.classList.add("game-space")
+                element.innerText = gameBoard.board[i];
+                element.addEventListener("click", (e)=> {
+                    let player = gameBoard.whosTurn();
+                    player.move(e.target["data-key"]);
+                });
+                _grid.append(element);
+            };
+        };
+        this._isInitialized = true;
+    };
     function updateGrid (){
-        let elements = Array.from(grid.querySelectorAll("div"));
+        let elements = Array.from(_grid.querySelectorAll("div"));
         for (i=0; i<elements.length; i++){
             let space=elements[i];
             let location = space["data-key"];
             space.innerText = gameBoard.board[location];
         };
     }
-    return {updateGrid};
+    return {updateGrid, initialize};
 })();
 
+const actions = (function(){
+    let _beginButton = document.getElementById("actions__begin");
+    _beginButton.addEventListener("click", ()=>{
+        let formPlayer1 = document.getElementById("player1").value;
+        let formPlayer2 = document.getElementById("player2").value;
+        console.log(formPlayer1);
+        console.log(formPlayer2);
+        if(formPlayer1 && formPlayer2){
+            players.player1.set(formPlayer1, "X");
+            players.player2.set(formPlayer2, "O");
+            displayController.initialize();
+            _beginButton.classList.add("inactive");
+            _resetButton.classList.remove("inactive");
+        };
+    });
+    let undoButton = document.getElementById("actions__undo");
+    undoButton.addEventListener("click", (e)=>{
+        console.log(e.target);
+        gameBoard.undoLastMove();
+        displayController.updateGrid();
+        undoButton.classList.add("inactive")
+    });
+    let _resetButton = document.getElementById("actions__reset");
+    _resetButton.addEventListener("click", (e)=>{
+        location.reload();
+    });
+    let _playAgainButton = document.getElementById("overlay__play-again");
+    _playAgainButton.addEventListener("click", (e)=>{
+        location.reload();
+    });
+    return {undoButton}
+})();
 
 const players = (function(){
     const _mover = (state) => ({
@@ -83,8 +113,7 @@ const players = (function(){
             gameBoard.turn ++;
             gameBoard.lastMove = location;
             displayController.updateGrid();
-            let undoButton = document.getElementById("actions__undo");
-            undoButton.classList.remove("inactive");
+            actions.undoButton.classList.remove("inactive");
             gameBoard.checkWin();
         }
     });
@@ -113,8 +142,3 @@ const players = (function(){
     return {player1, player2, list};
 })();
 
-
-// console stuff
-
-players.player1.set("John", "X");
-players.player2.set("Jill", "O");

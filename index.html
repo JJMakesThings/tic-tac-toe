@@ -9,16 +9,28 @@
     <script src="./scripts/script.js" defer></script>
 </head>
 <body>
+    <div id=overlay>
+        <h2 id=overlay__text>
+            Congratulations ...
+        </h2>
+        <button type="button" id="overlay__play-again">Play Again</button>
+    </div>
     <div id="container">
-        <h1>Tic-Tac-Toe</h1> 
+        <h1 id="title">Tic-Tac-Toe</h1> 
         <div id="players">
-             <label for="player1">X Player Name:</label>
-             <input type="text" id="player1"><br>
-             <label for="player2">O Player Name:</label>
-             <input type="text" id="player2"><br>
+            <div class="player">
+                <label for="player1">X Player Name:</label><br>
+                <input type="text" id="player1">
+            </div>
+             <div class="player">
+                <label for="player2">O Player Name:</label><br>
+                <input type="text" id="player2">
+             </div>
         </div>
         <div id="actions">
-            <button type="button" id="actions__undo">undo</button>
+            <button type="button" id="actions__begin">Begin</button>
+            <button type="button" id="actions__undo" class="inactive">undo</button>
+            <button type="button" id="actions__reset" class="inactive">Reset</button>
         </div>
         <div id="turn">
             <h1 id="turn__text"></h1>

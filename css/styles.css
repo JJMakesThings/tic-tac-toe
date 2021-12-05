@@ -1,15 +1,33 @@
 body{
     background-color: whitesmoke;
 }
-
+#overlay {
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+  }
 #container {
     padding: 10px 20px;
     max-width: 900px;
 }
+
+#title{
+    text-align: center;
+    margin: 20px;
+}
+
 #game-board {
     display:grid;
     grid-template-columns: repeat(3, 1fr);
-    margin: 20px auto;
+    margin: 40px auto;
     box-sizing: content-box;
     height: 310px;
     width: 310px;
@@ -24,33 +42,50 @@ body{
         font-weight: bold;
         color: black;
     }
-#actions__undo{
-    background-color: cadetblue;
-    color:rgb(38, 78, 80);
-    padding: 5px 20px;
-    margin: 10px 0;
-    border-radius: 5px;
 
+#players{
+    margin: 20px auto;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
-#actions__undo:hover
-#actions__undo:active{
-    background-color: rgb(141, 217, 219);
+    .player label{
+        margin: 10px auto;
+    }
+
+#actions{
+    margin: 20px auto;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
 }
-#actions__undo.inactive{
-    background-color: grey;
-    color: rgb(65, 65, 65)
-}
-#actions__undo.inactive:hover
-#actions__undo.inactive:active{
-    background-color: grey;
+    #actions button{
+        background-color: rgb(106, 179, 182);
+        color:rgb(10, 42, 44);
+        padding: 5px 20px;
+        margin: 0 20px;
+        border-radius: 5px;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+
+    #actions button:active,
+    #actions button:hover{
+        background-color: rgb(137, 187, 189);
+    }
+    #actions button.inactive{
+        display: none;
+
 }
 @media (min-width: 768px){
     #game-board {
-        height: 610px;
-        width: 610px;
+        height: 460px;
+        width: 460px;
     }
     .game-space{
-        line-height: 200px;
-        font-size: 2rem;
+        line-height: 150px;
+        font-size: 1.8rem;
     }
 }
